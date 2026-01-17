@@ -33,3 +33,18 @@ export const getAllUsers = async () => {
     },
   });
 };
+
+export const blockUser = async (id: string) => {
+  const user = await prisma.user.update({
+    where: { id },
+    data: { isActive: false },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      isActive: true,
+    },
+  });
+
+  return user;
+};
