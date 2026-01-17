@@ -24,6 +24,25 @@ export const getMe = async (req: Request, res: Response) => {
   }
 };
 
+export const getById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+
+    const user = await getUserById(id);
+
+    res.json({ user });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(404).json({ error: err.message });
+
+      return;
+    }
+
+    console.log(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 export const getAll = async (req: Request, res: Response) => {
   const users = await getAllUsers();
 
