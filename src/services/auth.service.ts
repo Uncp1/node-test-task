@@ -39,6 +39,10 @@ export const loginUser = async (email: string, password: string) => {
 
   const isValid = await comparePassword(password, user.password);
 
+  if (!isValid) {
+    throw new Error('Invalid credentials');
+  }
+
   const token = generateToken({ userId: user.id, role: user.role });
 
   return {

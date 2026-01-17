@@ -13,10 +13,8 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/me', getMe);
-
-router.get('/', requireRole('ADMIN'), getAll);
-
 router.get('/:id', requireAdminOrSelf, getUserById);
+router.get('/', requireRole('ADMIN'), getAll);
 
 router.patch<{ id: string }>('/:id/block', requireAdminOrSelf, block);
 

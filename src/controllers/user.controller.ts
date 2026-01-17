@@ -19,6 +19,7 @@ export const getMe = async (req: Request, res: Response) => {
       res.status(404).json({ error: err.message });
     }
 
+    console.log(err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -41,6 +42,7 @@ export const block = async (req: Request<BlockParams>, res: Response) => {
       return;
     }
 
+    console.log(err);
     res.status(500).json({ error: 'Server error' });
   }
 };
