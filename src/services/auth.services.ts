@@ -1,5 +1,7 @@
+import { email } from 'zod';
 import prisma from '../config/database';
-import { hashPassword } from '../utils/passwords';
+import { comparePassword, hashPassword } from '../utils/passwords';
+import { generateToken } from '../utils/jwt';
 
 interface RegisterUser {
   fullName: string;
@@ -22,4 +24,30 @@ export const registerUser = async (data: RegisterUser) => {
 
   const { password, ...userWithoutPassword } = user;
   return userWithoutPassword;
+};
+
+export const loginUser = async (email: string, password: string) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user) {
+    throw new Error('Invalid credentials');
+  }
+
+  if (!user.isActive) {
+    throw new Error('Account is blocked');
+  }
+
+  const isValid = await comparePassword(password, user.password);
+
+  const token = generateToken({ userId: user.id, role: user.role });
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    },
+  };
 };
