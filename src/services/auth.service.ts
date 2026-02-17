@@ -1,4 +1,3 @@
-import { email } from 'zod';
 import prisma from '../config/database';
 import { comparePassword, hashPassword } from '../utils/passwords';
 import { generateToken } from '../utils/jwt';

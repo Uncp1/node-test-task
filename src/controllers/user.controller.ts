@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { getUserById, getAllUsers, blockUser } from '../services/user.service';
 
-interface BlockParams {
-  id: string;
-}
-
 export const getMe = async (req: Request, res: Response) => {
   try {
     if (!req.user) {
@@ -17,6 +13,8 @@ export const getMe = async (req: Request, res: Response) => {
   } catch (err) {
     if (err instanceof Error) {
       res.status(404).json({ error: err.message });
+
+      return;
     }
 
     console.log(err);
@@ -44,14 +42,20 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const users = await getAllUsers();
+  try {
+    const users = await getAllUsers();
 
-  res.json({ users });
+    res.json({ users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
 };
 
-export const block = async (req: Request<BlockParams>, res: Response) => {
+export const block = async (req: Request, res: Response) => {
   try {
-    const user = await blockUser(req.params.id);
+    const id = String(req.params.id);
+    const user = await blockUser(id);
 
     res.json({ message: 'User blocked', user });
   } catch (err) {

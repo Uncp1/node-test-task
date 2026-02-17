@@ -9,10 +9,7 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json({ message: 'User registered', user });
   } catch (err) {
     // Prisma unique constraint error
-    if (
-      err instanceof Prisma.PrismaClientKnownRequestError &&
-      err.code === 'P2002'
-    ) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
       res.status(400).json({ error: 'Email already exists' });
 
       return;
@@ -32,6 +29,8 @@ export const login = async (req: Request, res: Response) => {
   } catch (err) {
     if (err instanceof Error) {
       res.status(401).json({ error: err.message });
+
+      return;
     }
 
     console.error(err);
