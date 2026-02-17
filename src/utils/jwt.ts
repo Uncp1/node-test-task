@@ -19,10 +19,9 @@ export const generateToken = (payload: JwtPayload): string => {
 export const verifyToken = (token: string): JwtPayload => {
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-    console.log('Decoded token:', decoded); // временно для отладки
+
     return jwtPayloadSchema.parse(decoded);
   } catch (err) {
-    console.error('Token verification error:', err); // временно для отладки
     throw err;
   }
 };
