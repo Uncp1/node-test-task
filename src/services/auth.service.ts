@@ -3,6 +3,7 @@ import prisma from '../config/database';
 import { comparePassword, hashPassword } from '../utils/passwords';
 import { generateToken } from '../utils/jwt';
 import { registerSchema } from '../validators/user.validator';
+import { User } from '@prisma/client';
 
 interface LoginResult {
   token: string;
@@ -15,8 +16,9 @@ interface LoginResult {
 }
 
 type RegisterBody = z.infer<typeof registerSchema>;
+type RegisterResult = Omit<User, 'password'>;
 
-export const registerUser = async (data: RegisterBody) => {
+export const registerUser = async (data: RegisterBody): Promise<RegisterResult> => {
   const hashedPassword = await hashPassword(data.password);
 
   const user = await prisma.user.create({
