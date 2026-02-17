@@ -3,7 +3,7 @@ import z from 'zod';
 
 type ValidationSource = 'body' | 'params' | 'query';
 
-export const validate = (schema: z.ZodType, source: ValidationSource = 'body') => {
+export const validate = <T>(schema: z.ZodType<T>, source: ValidationSource = 'body') => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.safeParse(req[source]);
 

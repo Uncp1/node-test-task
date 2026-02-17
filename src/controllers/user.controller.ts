@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getUserById, getAllUsers, blockUser } from '../services/user.service';
 
-export const getMe = async (req: Request, res: Response) => {
+export const getMe = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.user) {
       throw new Error('User not authenticated');
@@ -41,7 +41,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await getAllUsers();
 
@@ -52,7 +52,7 @@ export const getAll = async (req: Request, res: Response) => {
   }
 };
 
-export const block = async (req: Request, res: Response) => {
+export const block = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = String(req.params.id);
     const user = await blockUser(id);

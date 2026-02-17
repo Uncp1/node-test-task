@@ -1,8 +1,16 @@
 import { Request, Response } from 'express';
-import { loginUser, registerUser } from '../services/auth.service';
+import z from 'zod';
 import { Prisma } from '@prisma/client';
+import { loginUser, registerUser } from '../services/auth.service';
+import { loginSchema, registerSchema } from '../validators/user.validator';
 
-export const register = async (req: Request, res: Response) => {
+type RegisterBody = z.infer<typeof registerSchema>;
+type LoginBody = z.infer<typeof loginSchema>;
+
+export const register = async (
+  req: Request<{}, {}, RegisterBody>,
+  res: Response
+): Promise<void> => {
   try {
     const user = await registerUser(req.body);
 
@@ -20,7 +28,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
   try {
     const { email, password } = req.body;
 

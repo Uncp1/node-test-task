@@ -1,15 +1,22 @@
+import z from 'zod';
 import prisma from '../config/database';
 import { comparePassword, hashPassword } from '../utils/passwords';
 import { generateToken } from '../utils/jwt';
+import { registerSchema } from '../validators/user.validator';
 
-interface RegisterUser {
-  fullName: string;
-  birthDate: string;
-  email: string;
-  password: string;
+interface LoginResult {
+  token: string;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+    role: string;
+  };
 }
 
-export const registerUser = async (data: RegisterUser) => {
+type RegisterBody = z.infer<typeof registerSchema>;
+
+export const registerUser = async (data: RegisterBody) => {
   const hashedPassword = await hashPassword(data.password);
 
   const user = await prisma.user.create({
@@ -25,7 +32,7 @@ export const registerUser = async (data: RegisterUser) => {
   return userWithoutPassword;
 };
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (email: string, password: string): Promise<LoginResult> => {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
