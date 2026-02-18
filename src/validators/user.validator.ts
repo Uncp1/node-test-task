@@ -13,7 +13,7 @@ export const registerSchema = z.object({
     .string()
     .min(2, 'Full name must be at least 2 characters')
     .max(120, 'Full name is too long'),
-  birthDate: z
+  birthDate: z.coerce
     .date('Invalid date format, expected YYYY-MM-DD')
     .refine((val) => new Date(val) <= new Date(), 'Birth date cannot be in the future'),
   email: z.email('Invalid email format'),
